@@ -39,6 +39,23 @@ function ShopInfo({ isOwner }) {
       })
       .catch((err) => console.error(err));
   };
+
+  const totalReviewsLength =
+    products &&
+    products.reduce((acc, product) => acc + product.reviews.length, 0);
+
+  const totalRatings =
+    products &&
+    products.reduce(
+      (acc, product) =>
+        acc + product.reviews.reduce((sum, review) => sum + review.rating, 0),
+      0
+    );
+
+  const avg = totalRatings / totalReviewsLength || 0;
+
+  const averageRating = avg.toFixed(2);
+
   return (
     <div>
       <div className="w-full py-5">
@@ -64,11 +81,11 @@ function ShopInfo({ isOwner }) {
       </div>
       <div className="p-3">
         <h5 className="font-[600]">Total Products</h5>
-        {/* <h4 className="text-[#000000a6]">{products && products.length}</h4> */}
+        <h4 className="text-[#000000a6]">{products && products.length}</h4>
       </div>
       <div className="p-3">
         <h5 className="font-[600]">Shop Ratings</h5>
-        <h4 className="text-[#000000b0]">4/5</h4>
+        <h4 className="text-[#000000b0]">{averageRating}</h4>
       </div>
       <div className="p-3">
         <h5 className="font-[600]">Joined On</h5>

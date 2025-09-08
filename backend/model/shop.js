@@ -9,8 +9,7 @@ const shopSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: [true, "Please enter your shop email!"],
-        unique: true
+        required: [true, "Please enter your shop email address"],
     },
     password: {
         type: String,
@@ -23,11 +22,11 @@ const shopSchema = new mongoose.Schema({
     },
     address: {
         type: String,
-        required: true
+        required: true,
     },
     phoneNumber: {
         type: Number,
-        required: true
+        required: true,
     },
     role: {
         type: String,
@@ -45,8 +44,34 @@ const shopSchema = new mongoose.Schema({
     },
     zipCode: {
         type: Number,
-        required: true
+        required: true,
     },
+    withdrawMethod: {
+        type: Object,
+    },
+    availableBalance: {
+        type: Number,
+        default: 0,
+    },
+    transections: [
+        {
+            amount: {
+                type: Number,
+                required: true,
+            },
+            status: {
+                type: String,
+                default: "Processing",
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now(),
+            },
+            updatedAt: {
+                type: Date,
+            },
+        },
+    ],
     resetPasswordToken: String,
     resetPasswordTime: Date,
 }, { timestamps: true });

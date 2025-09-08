@@ -1,20 +1,19 @@
-import { useState } from "react";
 import DashboardHeader from "../../components/Shop/Layout/DashboardHeader.jsx";
 import DashboardSideBar from "../../components/Shop/Layout/DashboardSideBar.jsx";
-import DashboardHero from "../../components/Shop/DashboardHero.jsx";
+import ShopSettings from "../../components/Shop/ShopSettings.jsx";
 
-function ShopDashboardPage() {
+const ShopSettingsPage = () => {
   return (
     <div>
       <DashboardHeader />
-      <div className="w-full flex items-center justify-between">
+      <div className="flex items-start justify-between w-full">
         <div className="w-[80px] 800px:w-[330px]">
-          <DashboardSideBar active={1} />
+          <DashboardSideBar active={11} />
         </div>
-        <DashboardHero />
+        <ShopSettings />
       </div>
     </div>
   );
-}
+};
 
-export default ShopDashboardPage;
+export default ShopSettingsPage;

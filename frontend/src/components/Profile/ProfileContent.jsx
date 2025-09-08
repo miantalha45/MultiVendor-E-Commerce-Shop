@@ -286,14 +286,16 @@ const AllOrders = () => {
 };
 
 const AllRefundOrders = () => {
-  const eligibleOrders = [
-    {
-      _id: "68644098h",
-      cart: [{ name: "Iphone 14 pro max" }],
-      totalPrice: 120,
-      status: "Processing",
-    },
-  ];
+  const { user } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllOrdersOfUser(user._id));
+  }, []);
+
+  const eligibleOrders =
+    orders && orders.filter((item) => item.status === "Processing refund");
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -369,14 +371,14 @@ const AllRefundOrders = () => {
 };
 
 const TrackOrder = () => {
-  const orders = [
-    {
-      _id: "68644098h",
-      cart: [{ name: "Iphone 14 pro max" }],
-      totalPrice: 120,
-      status: "Processing",
-    },
-  ];
+  const { orders } = useSelector((state) => state.order);
+  const { user } = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllOrdersOfUser(user._id));
+  }, [dispatch]);
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
 

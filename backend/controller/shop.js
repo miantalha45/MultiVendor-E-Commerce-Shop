@@ -197,11 +197,68 @@ const getShopInfo = catchAsyncError(async (req, res, next) => {
     }
 });
 
+//update seller info
+const updateSellerInfo = catchAsyncError(async (req, res, next) => {
+    try {
+        const { name, description, address, phoneNumber, zipCode } = req.body;
+
+        const shop = await Shop.findOne(req.seller._id);
+
+        if (!shop) {
+            return next(new ErrorHandler("Shop not found", 400));
+        }
+
+        shop.name = name;
+        shop.description = description;
+        shop.address = address;
+        shop.phoneNumber = phoneNumber;
+        shop.zipCode = zipCode;
+
+        await shop.save();
+
+        res.status(201).json({
+            success: true,
+            shop,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+})
+
+// update seller avatar
+const updateSellerAvatar = catchAsyncError(async (req, res, next) => {
+    try {
+        const existingShop = await Shop.findById(req.seller.id);
+
+        const existAvatarPath = `uploads/${existingShop.avatar.url}`;
+
+        fs.unlink(existAvatarPath, (err) => console.log("Error in deleting prev image: ", err));
+
+        const fileName = req.file.filename;
+        const fileUrl = path.join(fileName);
+
+        const seller = await Shop.findByIdAndUpdate(req.seller.id, {
+            avatar: {
+                public_id: fileUrl,
+                url: `${fileUrl}`,
+            }
+        });
+
+        return res.status(200).json({ success: true, message: "Shop avatar updated successfully.", seller });
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+
+    }
+});
+
 module.exports = {
     CreateShop,
     activateSeller,
     loginShop,
     getShop,
     logout,
-    getShopInfo
+    getShopInfo,
+    updateSellerInfo,
+    updateSellerAvatar
 }

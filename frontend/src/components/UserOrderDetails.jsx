@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "../styles/style";
 import { BsFillBagFill } from "react-icons/bs";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -6,15 +5,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllOrdersOfUser } from "../redux/actions/order";
 import { useState } from "react";
 import { useEffect } from "react";
-import { backend_url } from "../server";
+import { backend_url, server } from "../server";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { RxCross1 } from "react-icons/rx";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const UserOrderDetails = () => {
   const { orders } = useSelector((state) => state.order);
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const [status, setStatus] = useState("");
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [rating, setRating] = useState(1);
@@ -29,7 +29,46 @@ const UserOrderDetails = () => {
 
   const data = orders && orders.find((item) => item._id === id);
 
-  const orderUpdateHandler = (e) => {};
+  const reviewHandler = async (e) => {
+    e.preventDefault();
+
+    await axios
+      .put(
+        `${server}/product/create-new-review`,
+        { user, rating, comment, productId: selectedItem?._id, orderId: id },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        toast.success(res.data.message);
+        dispatch(getAllOrdersOfUser(user?._id));
+        setOpen(false);
+        setComment("");
+        setRating(1);
+        setSelectedItem(null);
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
+
+  const refundHandler = async () => {
+    await axios
+      .put(
+        `${server}/order/order-refund/${id}`,
+        {
+          status: "Processing refund",
+        },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        toast.success(res.data.message);
+        dispatch(getAllOrdersOfUser(user._id));
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
+
   return (
     <div className={`py-4 min-h-screen ${styles.section}`}>
       <div className="w-full flex items-center justify-between">
@@ -65,7 +104,7 @@ const UserOrderDetails = () => {
                 US${item.discountPrice} x {item.qty}
               </h5>
             </div>
-            {data?.status === "Delivered" ? (
+            {!item.isReviewed && data?.status === "Delivered" ? (
               <div
                 className={`${styles.button} text-[#fff]`}
                 onClick={() => setOpen(true) || setSelectedItem(item)}
@@ -187,6 +226,15 @@ const UserOrderDetails = () => {
             Status:{" "}
             {data?.paymentInfo?.status ? data?.paymentInfo?.status : "Not Paid"}
           </h4>
+          <br />
+          {data?.status === "Delivered" && (
+            <div
+              className={`${styles.button} text-white`}
+              onClick={refundHandler}
+            >
+              Give a Refund
+            </div>
+          )}
         </div>
       </div>
       <br />

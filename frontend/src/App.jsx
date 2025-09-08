@@ -17,6 +17,7 @@ import {
   PaymentPage,
   OrderSuccessPage,
   OrderDetailsPage,
+  TrackOrderPage,
 } from "./routes/Routes";
 import {
   ShopHomePage,
@@ -29,6 +30,10 @@ import {
   ShopPreviewPage,
   ShopAllOrdersPage,
   ShopOrderDetailsPage,
+  ShopAllRefundsPage,
+  ShopSettingsPage,
+  ShopWithdrawMoneyPage,
+  ShopInboxPage,
 } from "./routes/ShopRoutes.jsx";
 import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
@@ -120,6 +125,14 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/user/track/order/:id"
+            element={
+              <ProtectedRoute>
+                <TrackOrderPage />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
           {/* shop Routes */}
@@ -130,6 +143,14 @@ function App() {
             element={
               <SellerProtectedRoute>
                 <ShopHomePage />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <SellerProtectedRoute>
+                <ShopSettingsPage />
               </SellerProtectedRoute>
             }
           />
@@ -186,6 +207,30 @@ function App() {
             element={
               <SellerProtectedRoute>
                 <ShopAllOrdersPage />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard-messages"
+            element={
+              <SellerProtectedRoute>
+                <ShopInboxPage />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard-refunds"
+            element={
+              <SellerProtectedRoute>
+                <ShopAllRefundsPage />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard-withdraw-money"
+            element={
+              <SellerProtectedRoute>
+                <ShopWithdrawMoneyPage />
               </SellerProtectedRoute>
             }
           />
