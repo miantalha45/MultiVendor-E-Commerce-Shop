@@ -18,6 +18,7 @@ import {
   OrderSuccessPage,
   OrderDetailsPage,
   TrackOrderPage,
+  UserInboxPage,
 } from "./routes/Routes";
 import {
   ShopHomePage,
@@ -114,6 +115,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/inbox"
+            element={
+              <ProtectedRoute>
+                <UserInboxPage />
               </ProtectedRoute>
             }
           />

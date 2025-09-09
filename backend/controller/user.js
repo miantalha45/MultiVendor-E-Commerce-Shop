@@ -299,6 +299,19 @@ const updatePassword = catchAsyncError(async (req, res, next) => {
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
     }
+});
+
+const getUserInfo = catchAsyncError(async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id);
+
+        res.status(201).json({
+            success: true,
+            user,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
 })
 
 module.exports = {
@@ -311,5 +324,6 @@ module.exports = {
     updateUserAvatar,
     updateUserAddress,
     deleteUserAddress,
-    updatePassword
+    updatePassword,
+    getUserInfo
 }
