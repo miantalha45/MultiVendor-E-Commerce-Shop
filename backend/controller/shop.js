@@ -172,8 +172,10 @@ const getShop = catchAsyncError(async (req, res, next) => {
 const logout = catchAsyncError(async (req, res, next) => {
     try {
         res.cookie("seller_token", null, {
-            maxAge: new Date(Date.now()),
-            httpOnly: true
+            expires: new Date(Date.now()),
+            httpOnly: true,
+            sameSite: "none",
+            secure: true,
         });
 
         res.status(200).json({ success: true, message: " Log out Successfully" })
