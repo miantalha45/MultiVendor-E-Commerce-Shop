@@ -1,16 +1,20 @@
 const Messages = require('../model/messages');
 const catchAsyncError = require('../middleware/catchAsyncError');
-const ErrorHandler = require('../utils/ErrorHandler')
+const ErrorHandler = require('../utils/ErrorHandler');
+const cloudinary = require("cloudinary");
 
 const createNewMessage = catchAsyncError(async (req, res, next) => {
     try {
         const messageData = req.body;
 
-        if (req.file) {
-            // console.log(req.file)
-            const fileName = req.file.filename;
-
-            messageData.images = fileName;
+        if (req.body.images) {
+            const myCloud = await cloudinary.v2.uploader.upload(req.body.images, {
+                folder: "messages",
+            });
+            messageData.images = {
+                public_id: myCloud.public_id,
+                url: myCloud.url,
+            };
         }
 
         messageData.conversationId = req.body.conversationId;

@@ -4,30 +4,50 @@ const Shop = require('../model/shop');
 const ErrorHandler = require('../utils/ErrorHandler');
 const fs = require("fs");
 const catchAsyncError = require('../middleware/catchAsyncError');
+const cloudinary = require("cloudinary");
 
 // create product
 const CreateProduct = catchAsyncError(async (req, res, next) => {
     try {
-        console.log("create product hitted..->")
         const shopId = req.body.shopId;
         const shop = await Shop.findById(shopId);
-        if (!shop)
-            return next(new ErrorHandler("Shop Id is invalid", 400));
+        if (!shop) {
+            return next(new ErrorHandler("Shop Id is invalid!", 400));
+        } else {
+            let images = [];
 
-        console.log('req.files: ', req.files)
-        const files = req.files;
-        const imageUrls = files.map((file) => `${file.filename}`);
+            if (typeof req.body.images === "string") {
+                images.push(req.body.images);
+            } else {
+                images = req.body.images;
+            }
 
-        console.log("image url: ", imageUrls)
-        const productData = req.body;
-        productData.images = imageUrls;
-        productData.shop = shop;
+            const imagesLinks = [];
 
-        const product = await Product.create(productData);
+            for (let i = 0; i < images.length; i++) {
+                const result = await cloudinary.v2.uploader.upload(images[i], {
+                    folder: "products",
+                });
 
-        return res.status(201).json({ success: true, message: "Product created successfully!", product })
+                imagesLinks.push({
+                    public_id: result.public_id,
+                    url: result.secure_url,
+                });
+            }
+
+            const productData = req.body;
+            productData.images = imagesLinks;
+            productData.shop = shop;
+
+            const product = await Product.create(productData);
+
+            res.status(201).json({
+                success: true,
+                product,
+            });
+        }
     } catch (error) {
-        return next(new ErrorHandler(error.message, 500))
+        return next(new ErrorHandler(error, 400));
     }
 })
 
@@ -59,26 +79,23 @@ const deleteProduct = catchAsyncError(async (req, res, next) => {
         const product = await Product.findById(req.params.id);
 
         if (!product) {
-            return next(new ErrorHandler("Product not found with this id!", 404));
+            return next(new ErrorHandler("Product is not found with this id", 404));
         }
 
-        for (const imageUrl of product.images) {
-            const filePath = `uploads/${imageUrl}`;
-            try {
-                await fs.promises.unlink(filePath);
-            } catch (err) {
-                console.error(`Error deleting file ${filePath}:`, err.message);
-            }
+        for (let i = 0; 1 < product.images.length; i++) {
+            const result = await cloudinary.v2.uploader.destroy(
+                product.images[i].public_id
+            );
         }
 
-        await Product.findByIdAndDelete(req.params.id);
+        await product.remove();
 
-        res.status(200).json({
+        res.status(201).json({
             success: true,
-            message: "Product deleted successfully!",
+            message: "Product Deleted successfully!",
         });
     } catch (error) {
-        return next(new ErrorHandler(error.message, 500));
+        return next(new ErrorHandler(error, 400));
     }
 });
 

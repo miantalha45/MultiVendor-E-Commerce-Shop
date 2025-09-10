@@ -149,10 +149,16 @@ const UserInboxPage = () => {
   };
 
   const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
+    const reader = new FileReader();
 
-    setImages(file);
-    await imageSendingHandler(file);
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setImages(reader.result);
+        imageSendingHandler(reader.result);
+      }
+    };
+
+    reader.readAsDataURL(e.target.files[0]);
   };
 
   const imageSendingHandler = async (e) => {
@@ -301,7 +307,7 @@ const MessageList = ({
     >
       <div className="relative">
         <img
-          src={`${backend_url + user?.avatar?.url}`}
+          src={`${user?.avatar?.url}`}
           alt=""
           className="w-[50px] h-[50px] rounded-full"
         />
@@ -342,7 +348,7 @@ const SellerInbox = ({
       <div className="w-full flex p-3 items-center justify-between bg-slate-200">
         <div className="flex">
           <img
-            src={`${backend_url + userData?.avatar?.url}`}
+            src={`${userData?.avatar?.url}`}
             alt=""
             className="w-[60px] h-[60px] rounded-full"
           />
@@ -370,14 +376,14 @@ const SellerInbox = ({
             >
               {item.sender !== sellerId && (
                 <img
-                  src={`${backend_url + userData?.avatar?.url}`}
+                  src={`${userData?.avatar?.url}`}
                   className="w-[40px] h-[40px] rounded-full mr-3"
                   alt=""
                 />
               )}
               {item.images && (
                 <img
-                  src={`${backend_url + item.images}`}
+                  src={`${item.images?.url}`}
                   className="w-[300px] h-[300px] object-cover rounded-[10px] ml-2 mb-2"
                 />
               )}

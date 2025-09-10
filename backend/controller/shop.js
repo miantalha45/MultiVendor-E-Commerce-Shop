@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const sendMail = require('../utils/sendMail');
 const catchAsyncError = require('../middleware/catchAsyncError');
 const { sendShopToken } = require('../utils/jwtToken');
+const cloudinary = require("cloudinary");
 
 // create shop
 async function CreateShop(req, res, next) {
@@ -13,42 +14,27 @@ async function CreateShop(req, res, next) {
         const { email } = req.body;
 
         const sellerEmail = await Shop.findOne({ email: email });
-        console.log("sellerEmail", sellerEmail)
-
-        console.log("req.body in shop", req.body)
 
         if (sellerEmail) {
-            console.log("shop already created")
-            const filename = req.file.filename;
-
-            const filePath = `uploads/${filename}`;
-            fs.unlink(filePath, (err) => {
-                if (err) {
-                    console.error(err)
-                    res.status(500).json({ message: "Error in deleting file" })
-                }
-            })
             return next(new ErrorHandler("Shop Already exists", 409));
         }
 
-        console.log(req.file)
-        const fileName = req.file.filename;
-        const fileUrl = path.join(fileName);
-
-        const { name, password, address, phoneNumber, zipCode, } = req.body;
+        const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+            folder: "avatars",
+        });
 
         const seller = {
-            name,
-            email,
-            password,
+            name: req.body.name,
+            email: email,
+            password: req.body.password,
             avatar: {
-                public_id: fileName,
-                url: fileName,
+                public_id: myCloud.public_id,
+                url: myCloud.secure_url,
             },
-            address,
-            phoneNumber,
-            zipCode
-        }
+            address: req.body.address,
+            phoneNumber: req.body.phoneNumber,
+            zipCode: req.body.zipCode,
+        };
 
         const activationToken = createActivationToken(seller);
 
@@ -229,27 +215,31 @@ const updateSellerInfo = catchAsyncError(async (req, res, next) => {
 // update seller avatar
 const updateSellerAvatar = catchAsyncError(async (req, res, next) => {
     try {
-        const existingShop = await Shop.findById(req.seller.id);
+        let existsSeller = await Shop.findById(req.seller._id);
 
-        const existAvatarPath = `uploads/${existingShop.avatar.url}`;
+        const imageId = existsSeller.avatar.public_id;
 
-        fs.unlink(existAvatarPath, (err) => console.log("Error in deleting prev image: ", err));
+        await cloudinary.v2.uploader.destroy(imageId);
 
-        const fileName = req.file.filename;
-        const fileUrl = path.join(fileName);
-
-        const seller = await Shop.findByIdAndUpdate(req.seller.id, {
-            avatar: {
-                public_id: fileUrl,
-                url: `${fileUrl}`,
-            }
+        const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+            folder: "avatars",
+            width: 150,
         });
 
-        return res.status(200).json({ success: true, message: "Shop avatar updated successfully.", seller });
+        existsSeller.avatar = {
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url,
+        };
 
+
+        await existsSeller.save();
+
+        res.status(200).json({
+            success: true,
+            seller: existsSeller,
+        });
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
-
     }
 });
 

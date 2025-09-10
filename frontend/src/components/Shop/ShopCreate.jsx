@@ -20,45 +20,41 @@ const ShopCreate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const config = { headers: { "Content-Type": "multipart/form-data" } };
-
-      const newForm = new FormData();
-
-      newForm.append("file", avatar);
-      newForm.append("name", name);
-      newForm.append("email", email);
-      newForm.append("password", password);
-      newForm.append("phoneNumber", phoneNumber);
-      newForm.append("address", address);
-      newForm.append("zipCode", zipCode);
-
-      const response = await axios.post(
-        `${server}/shop/create-shop`,
-        newForm,
-        config
-      );
-      console.log(response);
-      if (response.data.success) {
-        toast.success(response.data.message);
+    axios
+      .post(`${server}/shop/create-shop`, {
+        name,
+        email,
+        password,
+        avatar,
+        zipCode,
+        address,
+        phoneNumber,
+      })
+      .then((res) => {
+        toast.success(res.data.message);
         setName("");
         setEmail("");
         setPassword("");
-        setAvatar(null);
+        setAvatar();
+        setZipCode();
         setAddress("");
-        setPhoneNumber("");
-        setZipCode("");
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message);
-    }
+        setPhoneNumber();
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
   };
 
   const handleFileInputChange = (e) => {
-    const file = e.target.files[0];
-    setAvatar(file);
-    console.log(file);
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setAvatar(reader.result);
+      }
+    };
+
+    reader.readAsDataURL(e.target.files[0]);
   };
 
   return (

@@ -1,5 +1,6 @@
 const app = require('./app');
 const connectDatabase = require('./db/Database');
+const cloudinary = require('cloudinary');
 
 // handling uncaught exceptions
 process.on("uncaughtException", (error) => {
@@ -17,6 +18,12 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 // connect to database
 console.log("Connecting to DB:", process.env.MONGO_URI);
 connectDatabase();
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+})
 
 // create server
 const server = app.listen(process.env.PORT, () => console.log("Server started on PORT: ", process.env.PORT));

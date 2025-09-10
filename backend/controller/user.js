@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const sendMail = require('../utils/sendMail');
 const catchAsyncError = require('../middleware/catchAsyncError');
 const { sendToken } = require('../utils/jwtToken');
+const cloudinary = require("cloudinary");
 
 async function CreateUser(req, res, next) {
     try {
@@ -17,30 +18,22 @@ async function CreateUser(req, res, next) {
         // console.log("req.body in user", req.body)
 
         if (userEmail) {
-            console.log("user already created")
-            const filename = req.file.filename;
-            const filePath = `uploads/${filename}`;
-            fs.unlink(filePath, (err) => {
-                if (err) {
-                    console.error(err)
-                    res.status(500).json({ message: "Error in deleting file" })
-                }
-            })
             return next(new ErrorHandler("User Already exists", 409));
         }
 
-        const fileName = req.file.filename;
-        const fileUrl = path.join(fileName);
+        const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+            folder: "avatars",
+        });
 
         const user = {
-            name,
-            email,
-            password,
+            name: name,
+            email: email,
+            password: password,
             avatar: {
-                public_id: fileUrl,
-                url: `${fileUrl}`,
-            }
-        }
+                public_id: myCloud.public_id,
+                url: myCloud.secure_url,
+            },
+        };
 
         const activationToken = createActivationToken(user);
 
@@ -203,27 +196,31 @@ const updateUserInfo = catchAsyncError(async (req, res, next) => {
 // update profile Image
 const updateUserAvatar = catchAsyncError(async (req, res, next) => {
     try {
-        const existingUser = await User.findById(req.user.id);
+        let existsUser = await User.findById(req.user.id);
+        if (req.body.avatar !== "") {
+            const imageId = existsUser.avatar.public_id;
 
-        const existAvatarPath = `uploads/${existingUser.avatar.url}`;
+            await cloudinary.v2.uploader.destroy(imageId);
 
-        fs.unlink(existAvatarPath, (err) => console.log("Error in deleting prev image: ", err));
+            const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+                folder: "avatars",
+                width: 150,
+            });
 
-        const fileName = req.file.filename;
-        const fileUrl = path.join(fileName);
+            existsUser.avatar = {
+                public_id: myCloud.public_id,
+                url: myCloud.secure_url,
+            };
+        }
 
-        const user = await User.findByIdAndUpdate(req.user.id, {
-            avatar: {
-                public_id: fileUrl,
-                url: `${fileUrl}`,
-            }
+        await existsUser.save();
+
+        res.status(200).json({
+            success: true,
+            user: existsUser,
         });
-
-        return res.status(200).json({ success: true, message: "User avatar updated successfully.", user });
-
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
-
     }
 });
 
@@ -341,13 +338,13 @@ const deleteUser = catchAsyncError(async (req, res, next) => {
             );
         }
 
-        const existAvatarPath = `uploads/${user.avatar.url}`;
+        const imageId = user.avatar.public_id;
 
-        fs.unlink(existAvatarPath, (err) => console.log("Error in deleting prev image: ", err));
+        await cloudinary.v2.uploader.destroy(imageId);
 
         await User.findByIdAndDelete(req.params.id);
 
-        res.status(200).json({
+        res.status(201).json({
             success: true,
             message: "User deleted successfully!",
         });

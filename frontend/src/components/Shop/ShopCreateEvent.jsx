@@ -65,30 +65,40 @@ function ShopCreateEvent() {
 
     const newForm = new FormData();
 
-    console.log(images);
-
     images.forEach((image) => {
       newForm.append("images", image);
     });
-    newForm.append("name", name);
-    newForm.append("description", description);
-    newForm.append("category", category);
-    newForm.append("tags", tags);
-    newForm.append("originalPrice", originalPrice);
-    newForm.append("discountPrice", discountPrice);
-    newForm.append("stock", stock);
-    newForm.append("shopId", seller._id);
-    newForm.append("start_Date", startDate.toISOString());
-    newForm.append("Finish_Date", endDate.toISOString());
-
-    dispatch(createEvent(newForm));
+    const data = {
+      name,
+      description,
+      category,
+      tags,
+      originalPrice,
+      discountPrice,
+      stock,
+      images,
+      shopId: seller._id,
+      start_Date: startDate?.toISOString(),
+      Finish_Date: endDate?.toISOString(),
+    };
+    dispatch(createEvent(data));
   };
 
   const handleImageChange = (e) => {
-    e.preventDefault();
+    const files = Array.from(e.target.files);
 
-    let files = Array.from(e.target.files);
-    setImages((prevImages) => [...prevImages, ...files]);
+    setImages([]);
+
+    files.forEach((file) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setImages((old) => [...old, reader.result]);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
   const handleRemove = (file) => {
@@ -255,7 +265,7 @@ function ShopCreateEvent() {
               images.map((i, idx) => (
                 <div key={idx} className="relative m-2">
                   <img
-                    src={URL.createObjectURL(i)}
+                    src={i}
                     alt=""
                     className="h-[120px] w-[120px] object-cover rounded"
                   />

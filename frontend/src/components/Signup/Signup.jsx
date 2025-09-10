@@ -14,40 +14,33 @@ function Signup() {
   const [visible, setVisible] = useState(false);
   const [avatar, setAvatar] = useState(null);
 
+  const handleFileInputChange = (e) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setAvatar(reader.result);
+      }
+    };
+
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const config = { headers: { "Content-Type": "multipart/form-data" } };
 
-      const newForm = new FormData();
-
-      newForm.append("file", avatar);
-      newForm.append("name", name);
-      newForm.append("email", email);
-      newForm.append("password", password);
-
-      const response = await axios.post(
-        `${server}/user/create-user`,
-        newForm,
-        config
-      );
-      console.log(response);
-      if (response.data.success) {
-        toast.success(response.data.message);
+    axios
+      .post(`${server}/user/create-user`, { name, email, password, avatar })
+      .then((res) => {
+        toast.success(res.data.message);
         setName("");
         setEmail("");
         setPassword("");
-        setAvatar(null);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message);
-    }
-  };
-
-  const handleFileInputChange = (e) => {
-    const file = e.target.files[0];
-    setAvatar(file);
+        setAvatar();
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
   };
 
   return (
@@ -136,7 +129,7 @@ function Signup() {
                 <span className="inline-block h-8 w-8 rounded-full overflow-hidden">
                   {avatar ? (
                     <img
-                      src={URL.createObjectURL(avatar)}
+                      src={avatar}
                       alt="avatar"
                       className="h-full w-full object-cover rounded-full"
                     />
