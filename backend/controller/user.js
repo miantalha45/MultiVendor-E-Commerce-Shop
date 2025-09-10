@@ -44,7 +44,7 @@ async function CreateUser(req, res, next) {
 
         const activationToken = createActivationToken(user);
 
-        const activationUrl = `http://localhost:5173/activation/${activationToken}`;
+        const activationUrl = `https://multi-vendor-e-commerce-shop.vercel.app/activation/${activationToken}`;
 
         try {
             await sendMail({
