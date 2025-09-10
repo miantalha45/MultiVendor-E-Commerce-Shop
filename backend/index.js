@@ -15,6 +15,7 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 }
 
 // connect to database
+console.log("Connecting to DB:", process.env.MONGO_URI);
 connectDatabase();
 
 // create server
