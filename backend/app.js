@@ -10,6 +10,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.static("uploads"));
 app.use(express.urlencoded({ extended: true }));
+app.get('/', () => {
+    console.log('hello from server');
+})
 
 // config
 // console.log("process.env.NODE_ENV", process.env.NODE_ENV)
