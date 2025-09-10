@@ -50,7 +50,7 @@ import { useEffect } from "react";
 import { loadSeller, loadUser } from "./redux/actions/user";
 import store from "./redux/store";
 import ProtectedRoute from "./routes/ProtectedRoute";
-import SellerProtectedRoute from "./routes/sellerProtectedRoute.jsx";
+import SellerProtectedRoute from "./routes/SellerProtectedRoute.jsx";
 import { getAllProducts } from "./redux/actions/product.js";
 import { getAllEvents } from "./redux/actions/event.js";
 import { useState } from "react";
