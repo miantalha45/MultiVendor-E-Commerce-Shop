@@ -1,7 +1,7 @@
 const express = require('express');
 const { upload } = require('../multer');
-const { CreateUser, activateUser, login, getUser, logout, updateUserInfo, updateUserAvatar, updateUserAddress, deleteUserAddress, updatePassword, getUserInfo } = require('../controller/user');
-const { isAuthenticated } = require('../middleware/auth');
+const { CreateUser, activateUser, login, getUser, logout, updateUserInfo, updateUserAvatar, updateUserAddress, deleteUserAddress, updatePassword, getUserInfo, getAllUsers, deleteUser } = require('../controller/user');
+const { isAuthenticated, isAdmin } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -15,6 +15,8 @@ router.put('/update-avatar', isAuthenticated, upload.single("image"), updateUser
 router.put('/update-user-addresses', isAuthenticated, updateUserAddress);
 router.delete('/delete-user-address/:id', isAuthenticated, deleteUserAddress);
 router.put('/update-password', isAuthenticated, updatePassword);
-router.get("/user-info/:id", getUserInfo)
+router.get("/user-info/:id", getUserInfo);
+router.get("/admin-all-users", isAuthenticated, isAdmin("Admin"), getAllUsers);
+router.delete("/delete-user/:id", isAuthenticated, isAdmin("Admin"), deleteUser);
 
 module.exports = router;

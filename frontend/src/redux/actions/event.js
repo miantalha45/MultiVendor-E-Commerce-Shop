@@ -56,7 +56,7 @@ export const deleteevent = (id) => async (dispatch) => {
             type: "deleteEventRequest"
         });
 
-        const { data } = await axios.delete(`${server}/event/delete-event-shop/${id}`, {
+        const { data } = await axios.delete(`${server}/event/delete-shop-event/${id}`, {
             withCredentials: true
         });
 

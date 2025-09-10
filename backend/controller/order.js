@@ -171,6 +171,21 @@ const orderRefundSuccess = catchAsyncError(async (req, res, next) => {
     }
 });
 
+const getAdminAllOrders = catchAsyncError(async (req, res, next) => {
+    try {
+        const orders = await Order.find().sort({
+            deliveredAt: -1,
+            createdAt: -1,
+        });
+        res.status(201).json({
+            success: true,
+            orders,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+})
+
 module.exports = {
     createOrder,
     getUserAllOrders,
@@ -178,5 +193,6 @@ module.exports = {
     getSellerAllOrders,
     updateOrderStatus,
     refundOrder,
-    orderRefundSuccess
+    orderRefundSuccess,
+    getAdminAllOrders
 }

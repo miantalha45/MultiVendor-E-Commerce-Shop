@@ -149,7 +149,6 @@ const loginShop = catchAsyncError(async (req, res, next) => {
     }
 })
 
-
 // load Shop
 const getShop = catchAsyncError(async (req, res, next) => {
     try {
@@ -252,6 +251,82 @@ const updateSellerAvatar = catchAsyncError(async (req, res, next) => {
     }
 });
 
+// update payment method
+const updatePaymentMethod = catchAsyncError(async (req, res, next) => {
+    try {
+        const { withdrawMethod } = req.body;
+
+        const seller = await Shop.findByIdAndUpdate(req.seller._id, {
+            withdrawMethod,
+        });
+
+        res.status(201).json({
+            success: true,
+            seller,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+const deletePaymentMethod = catchAsyncError(async (req, res, next) => {
+    try {
+        const seller = await Shop.findById(req.seller._id);
+
+        if (!seller) {
+            return next(new ErrorHandler("Seller not found with this id", 400));
+        }
+
+        seller.withdrawMethod = null;
+
+        await seller.save();
+
+        res.status(201).json({
+            success: true,
+            seller,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+//all sellers -- admin
+const getAllSellers = catchAsyncError(async (req, res, next) => {
+    try {
+        const sellers = await Shop.find().sort({
+            createdAt: -1,
+        });
+        res.status(201).json({
+            success: true,
+            sellers,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+})
+
+// delete seller ---admin
+const deleteSeller = catchAsyncError(async (req, res, next) => {
+    try {
+        const seller = await Shop.findById(req.params.id);
+
+        if (!seller) {
+            return next(
+                new ErrorHandler("Seller is not available with this id", 400)
+            );
+        }
+
+        await Shop.findByIdAndDelete(req.params.id);
+
+        res.status(201).json({
+            success: true,
+            message: "Seller deleted successfully!",
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+})
+
 module.exports = {
     CreateShop,
     activateSeller,
@@ -260,5 +335,9 @@ module.exports = {
     logout,
     getShopInfo,
     updateSellerInfo,
-    updateSellerAvatar
+    updateSellerAvatar,
+    updatePaymentMethod,
+    deletePaymentMethod,
+    getAllSellers,
+    deleteSeller,
 }

@@ -6,7 +6,9 @@ const initialState = {
     user: null,
     error: null,
     successMessage: null,
-    addressLoading: false
+    addressLoading: false,
+    users: [],
+    usersLoading: false
 };
 
 const userReducer = createReducer(initialState, (builder) => {
@@ -63,6 +65,19 @@ const userReducer = createReducer(initialState, (builder) => {
         })
         .addCase("deleteUserAddressFailed", (state, action) => {
             state.addressLoading = false;
+            state.error = action.payload;
+        })
+
+        // get all users --- admin
+        .addCase("getAllUsersRequest", (state) => {
+            state.usersLoading = true;
+        })
+        .addCase("getAllUsersSuccess", (state, action) => {
+            state.usersLoading = false;
+            state.users = action.payload;
+        })
+        .addCase("getAllUsersFailed", (state, action) => {
+            state.usersLoading = false;
             state.error = action.payload;
         })
 

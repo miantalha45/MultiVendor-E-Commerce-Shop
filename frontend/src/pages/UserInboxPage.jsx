@@ -148,9 +148,59 @@ const UserInboxPage = () => {
       });
   };
 
-  const handleImageUpload = async (e) => {};
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
 
-  const imageSendingHandler = async (e) => {};
+    setImages(file);
+    await imageSendingHandler(file);
+  };
+
+  const imageSendingHandler = async (e) => {
+    const receiverId = currentChat.members.find(
+      (member) => member !== user._id
+    );
+
+    socketId.emit("sendMessage", {
+      senderId: user._id,
+      receiverId,
+      images: e,
+    });
+
+    try {
+      await axios
+        .post(
+          `${server}/message/create-new-message`,
+          {
+            images: e,
+            sender: user._id,
+            text: newMessage,
+            conversationId: currentChat._id,
+          },
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
+        .then((res) => {
+          setImages();
+          setMessages([...messages, res.data.message]);
+          updateLastMessageForImage();
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateLastMessageForImage = async () => {
+    await axios.put(
+      `${server}/conversation/update-last-message/${currentChat._id}`,
+      {
+        lastMessage: "Photo",
+        lastMessageId: user._id,
+      }
+    );
+  };
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ beahaviour: "smooth" });
@@ -325,9 +375,9 @@ const SellerInbox = ({
                   alt=""
                 />
               )}
-              {item.images && item.images.length > 0 && (
+              {item.images && (
                 <img
-                  src={`${item.images?.url}`}
+                  src={`${backend_url + item.images}`}
                   className="w-[300px] h-[300px] object-cover rounded-[10px] ml-2 mb-2"
                 />
               )}

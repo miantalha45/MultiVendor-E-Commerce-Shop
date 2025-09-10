@@ -7,7 +7,7 @@ const fs = require('fs');
 // create event
 const CreateEvent = catchAsyncError(async (req, res, next) => {
     try {
-        console.log("create event hitted..->")
+        // console.log("create event hitted..->")
         const shopId = req.body.shopId;
         const shop = await Shop.findById(shopId);
         if (!shop)
@@ -77,11 +77,27 @@ const getAllEvents = catchAsyncError(async (req, res, next) => {
         return next(new ErrorHandler(error.message, 500))
 
     }
-})
+});
+
+const getAllEventsForAdmin = catchAsyncError(async (req, res, next) => {
+    try {
+        const events = await Event.find().sort({
+            createdAt: -1,
+        });
+        res.status(201).json({
+            success: true,
+            events,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
 
 module.exports = {
     CreateEvent,
     deleteEvent,
     getAllEvents,
-    getAllShopEvents
+    getAllShopEvents,
+    getAllEventsForAdmin,
+    deleteEvent
 }

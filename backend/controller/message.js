@@ -6,11 +6,11 @@ const createNewMessage = catchAsyncError(async (req, res, next) => {
     try {
         const messageData = req.body;
 
-        if (req.files) {
-            const files = req.files;
-            const imageUrls = files.map((file) => `${file.filename}`);
+        if (req.file) {
+            // console.log(req.file)
+            const fileName = req.file.filename;
 
-            messageData.images = imageUrls;
+            messageData.images = fileName;
         }
 
         messageData.conversationId = req.body.conversationId;

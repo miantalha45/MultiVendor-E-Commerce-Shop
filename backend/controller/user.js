@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const sendMail = require('../utils/sendMail');
 const catchAsyncError = require('../middleware/catchAsyncError');
 const { sendToken } = require('../utils/jwtToken');
-const user = require('../model/user');
 
 async function CreateUser(req, res, next) {
     try {
@@ -314,6 +313,47 @@ const getUserInfo = catchAsyncError(async (req, res, next) => {
     }
 })
 
+// all users --- for admin
+const getAllUsers = catchAsyncError(async (req, res, next) => {
+    try {
+        const users = await User.find().sort({
+            createdAt: -1,
+        });
+        res.status(201).json({
+            success: true,
+            users,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+});
+
+// delete user
+const deleteUser = catchAsyncError(async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id);
+
+        if (!user) {
+            return next(
+                new ErrorHandler("User is not available with this id", 400)
+            );
+        }
+
+        const existAvatarPath = `uploads/${user.avatar.url}`;
+
+        fs.unlink(existAvatarPath, (err) => console.log("Error in deleting prev image: ", err));
+
+        await User.findByIdAndDelete(req.params.id);
+
+        res.status(200).json({
+            success: true,
+            message: "User deleted successfully!",
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+})
+
 module.exports = {
     CreateUser,
     activateUser,
@@ -325,5 +365,7 @@ module.exports = {
     updateUserAddress,
     deleteUserAddress,
     updatePassword,
-    getUserInfo
+    getUserInfo,
+    getAllUsers,
+    deleteUser
 }

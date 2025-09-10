@@ -130,11 +130,27 @@ const createNewReview = catchAsyncError(async (req, res, next) => {
     }
 })
 
+// all products --- for admin
+const getAllProductsForAdmin = catchAsyncError(async (req, res, next) => {
+    try {
+        const products = await Product.find().sort({
+            createdAt: -1,
+        });
+        res.status(201).json({
+            success: true,
+            products,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+})
+
 
 module.exports = {
     CreateProduct,
     getAllShopProducts,
     deleteProduct,
     getAllProducts,
-    createNewReview
+    createNewReview,
+    getAllProductsForAdmin
 }

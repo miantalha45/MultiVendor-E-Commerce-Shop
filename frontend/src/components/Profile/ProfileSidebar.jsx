@@ -1,63 +1,168 @@
-import axios from "axios";
 import React from "react";
 import { AiOutlineLogin, AiOutlineMessage } from "react-icons/ai";
-import { HiOutlineReceiptRefund, HiOutlineShoppingBag } from "react-icons/hi";
-import { MdOutlineTrackChanges } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
-import { RxPerson } from "react-icons/rx";
+import { HiOutlineReceiptRefund, HiOutlineShoppingBag } from "react-icons/hi";
+import {
+  MdOutlineAdminPanelSettings,
+  MdOutlinePassword,
+  MdOutlineTrackChanges,
+} from "react-icons/md";
 import { TbAddressBook } from "react-icons/tb";
-import { useNavigate } from "react-router-dom";
+import { RxPerson } from "react-icons/rx";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
-function ProfileSidebar({ active, setActive }) {
+const ProfileSidebar = ({ setActive, active }) => {
   const navigate = useNavigate();
-  const sideOptions = [
-    { id: 1, name: "Profile", icon: RxPerson },
-    { id: 2, name: "Orders", icon: HiOutlineShoppingBag },
-    { id: 3, name: "Refunds", icon: HiOutlineReceiptRefund },
-    { id: 4, name: "Inbox", icon: AiOutlineMessage, nav: "/inbox" },
-    { id: 5, name: "Track Order", icon: MdOutlineTrackChanges },
-    { id: 6, name: "Change Password", icon: RiLockPasswordLine },
-    { id: 7, name: "Address", icon: TbAddressBook },
-    { id: 8, name: "Log out", icon: AiOutlineLogin, nav: "/" },
-  ];
-
+  const { user } = useSelector((state) => state.user);
   const logoutHandler = () => {
     axios
       .get(`${server}/user/logout`, { withCredentials: true })
       .then((res) => {
         toast.success(res.data.message);
-        window.location.reload();
+        window.location.reload(true);
         navigate("/login");
       })
-      .catch((err) => {
-        toast.error(err.response.data.message);
+      .catch((error) => {
+        console.log(error.response.data.message);
       });
   };
   return (
     <div className="w-full bg-white shadow-sm rounded-[10px] p-4 pt-8">
-      {sideOptions.map((i) => (
-        <div
-          className="flex items-center cursor-pointer w-full mb-8"
-          onClick={
-            i.id === 8
-              ? logoutHandler
-              : () => setActive(i.id) || (i.id === 4 ? navigate(i.nav) : "")
-          }
+      <div
+        className="flex items-center cursor-pointer w-full mb-8"
+        onClick={() => setActive(1)}
+      >
+        <RxPerson size={20} color={active === 1 ? "red" : ""} />
+        <span
+          className={`pl-3 ${
+            active === 1 ? "text-[red]" : ""
+          } 800px:block hidden`}
         >
-          <i.icon size={20} color={active === i.id ? "red" : ""} />
-          <span
-            className={`pl-3 ${
-              active === i.id ? "text-[red]" : ""
-            } 800px:block hidden`}
+          Profile
+        </span>
+      </div>
+      <div
+        className="flex items-center cursor-pointer w-full mb-8"
+        onClick={() => setActive(2)}
+      >
+        <HiOutlineShoppingBag size={20} color={active === 2 ? "red" : ""} />
+        <span
+          className={`pl-3 ${
+            active === 2 ? "text-[red]" : ""
+          } 800px:block hidden`}
+        >
+          Orders
+        </span>
+      </div>
+      <div
+        className="flex items-center cursor-pointer w-full mb-8"
+        onClick={() => setActive(3)}
+      >
+        <HiOutlineReceiptRefund size={20} color={active === 3 ? "red" : ""} />
+        <span
+          className={`pl-3 ${
+            active === 3 ? "text-[red]" : ""
+          } 800px:block hidden`}
+        >
+          Refunds
+        </span>
+      </div>
+
+      <div
+        className="flex items-center cursor-pointer w-full mb-8"
+        onClick={() => setActive(4) || navigate("/inbox")}
+      >
+        <AiOutlineMessage size={20} color={active === 4 ? "red" : ""} />
+        <span
+          className={`pl-3 ${
+            active === 4 ? "text-[red]" : ""
+          } 800px:block hidden`}
+        >
+          Inbox
+        </span>
+      </div>
+
+      <div
+        className="flex items-center cursor-pointer w-full mb-8"
+        onClick={() => setActive(5)}
+      >
+        <MdOutlineTrackChanges size={20} color={active === 5 ? "red" : ""} />
+        <span
+          className={`pl-3 ${
+            active === 5 ? "text-[red]" : ""
+          } 800px:block hidden`}
+        >
+          Track Order
+        </span>
+      </div>
+
+      <div
+        className="flex items-center cursor-pointer w-full mb-8"
+        onClick={() => setActive(6)}
+      >
+        <RiLockPasswordLine size={20} color={active === 6 ? "red" : ""} />
+        <span
+          className={`pl-3 ${
+            active === 6 ? "text-[red]" : ""
+          } 800px:block hidden`}
+        >
+          Change Password
+        </span>
+      </div>
+
+      <div
+        className="flex items-center cursor-pointer w-full mb-8"
+        onClick={() => setActive(7)}
+      >
+        <TbAddressBook size={20} color={active === 7 ? "red" : ""} />
+        <span
+          className={`pl-3 ${
+            active === 7 ? "text-[red]" : ""
+          } 800px:block hidden`}
+        >
+          Address
+        </span>
+      </div>
+
+      {user && user?.role === "Admin" && (
+        <Link to="/admin/dashboard">
+          <div
+            className="flex items-center cursor-pointer w-full mb-8"
+            onClick={() => setActive(8)}
           >
-            {i.name}
-          </span>
-        </div>
-      ))}
+            <MdOutlineAdminPanelSettings
+              size={20}
+              color={active === 7 ? "red" : ""}
+            />
+            <span
+              className={`pl-3 ${
+                active === 8 ? "text-[red]" : ""
+              } 800px:block hidden`}
+            >
+              Admin Dashboard
+            </span>
+          </div>
+        </Link>
+      )}
+      <div
+        className="single_item flex items-center cursor-pointer w-full mb-8"
+        onClick={logoutHandler}
+      >
+        <AiOutlineLogin size={20} color={active === 8 ? "red" : ""} />
+        <span
+          className={`pl-3 ${
+            active === 8 ? "text-[red]" : ""
+          } 800px:block hidden`}
+        >
+          Log out
+        </span>
+      </div>
     </div>
   );
-}
+};
 
 export default ProfileSidebar;

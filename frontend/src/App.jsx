@@ -36,6 +36,15 @@ import {
   ShopWithdrawMoneyPage,
   ShopInboxPage,
 } from "./routes/ShopRoutes.jsx";
+import {
+  AdminDashboardPage,
+  AdminDashboardUsers,
+  AdminDashboardSellers,
+  AdminDashboardOrders,
+  AdminDashboardProducts,
+  AdminDashboardEvents,
+  AdminDashboardWithdraw,
+} from "./routes/AdminRoutes.jsx";
 import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
 import { loadSeller, loadUser } from "./redux/actions/user";
@@ -49,6 +58,7 @@ import axios from "axios";
 import { server } from "./server.js";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import ProtectedAdminRoute from "./routes/ProtectedAdminRoute.jsx";
 
 function App() {
   const [stripeApiKey, setStripeApiKey] = useState("");
@@ -249,6 +259,64 @@ function App() {
               <SellerProtectedRoute>
                 <ShopOrderDetailsPage />
               </SellerProtectedRoute>
+            }
+          />
+
+          {/* admin routes */}
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardPage />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-users"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardUsers />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-sellers"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardSellers />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-orders"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardOrders />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-products"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardProducts />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-events"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardEvents />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-withdraw-request"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardWithdraw />
+              </ProtectedAdminRoute>
             }
           />
         </Routes>

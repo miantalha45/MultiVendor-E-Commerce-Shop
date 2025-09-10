@@ -11,9 +11,9 @@ const messagesSchema = new mongoose.Schema(
         sender: {
             type: String,
         },
-        images: [{
+        images: {
             type: String
-        }],
+        },
     },
     { timestamps: true }
 );

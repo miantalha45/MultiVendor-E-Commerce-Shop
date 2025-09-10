@@ -22,7 +22,7 @@ const DashboardMessages = () => {
   const [newMessage, setNewMessage] = useState("");
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [activeStatus, setActiveStatus] = useState(false);
-  const [images, setImages] = useState();
+  const [images, setImages] = useState(null);
   const [open, setOpen] = useState(false);
   const scrollRef = useRef(null);
 
@@ -150,16 +150,10 @@ const DashboardMessages = () => {
   };
 
   const handleImageUpload = async (e) => {
-    const reader = new FileReader();
+    const file = e.target.files[0];
 
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setImages(reader.result);
-        imageSendingHandler(reader.result);
-      }
-    };
-
-    reader.readAsDataURL(e.target.files[0]);
+    setImages(file);
+    await imageSendingHandler(file);
   };
 
   const imageSendingHandler = async (e) => {
@@ -175,12 +169,20 @@ const DashboardMessages = () => {
 
     try {
       await axios
-        .post(`${server}/message/create-new-message`, {
-          images: e,
-          sender: seller._id,
-          text: newMessage,
-          conversationId: currentChat._id,
-        })
+        .post(
+          `${server}/message/create-new-message`,
+          {
+            images: e,
+            sender: seller._id,
+            text: newMessage,
+            conversationId: currentChat._id,
+          },
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
         .then((res) => {
           setImages();
           setMessages([...messages, res.data.message]);
@@ -204,6 +206,8 @@ const DashboardMessages = () => {
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ beahaviour: "smooth" });
   }, [messages]);
+
+  // console.log(messages);
 
   return (
     <div className="w-[90%] bg-white m-5 h-[85vh] overflow-y-scroll rounded">
@@ -262,8 +266,8 @@ const MessageList = ({
   setActiveStatus,
   isLoading,
 }) => {
-  console.log(data);
-  const [user, setUser] = useState([]);
+  // console.log(data);
+  const [user, setUser] = useState({});
   const navigate = useNavigate();
   const handleClick = (id) => {
     navigate(`/dashboard-messages?${id}`);
@@ -273,9 +277,9 @@ const MessageList = ({
 
   useEffect(() => {
     const userId = data.members.find((user) => user != me);
-
     const getUser = async () => {
       try {
+        console.log("requested");
         const res = await axios.get(`${server}/user/user-info/${userId}`);
         setUser(res.data.user);
       } catch (error) {
@@ -315,7 +319,7 @@ const MessageList = ({
         <p className="text-[16px] text-[#000c]">
           {!isLoading && data?.lastMessageId !== user?._id
             ? "You:"
-            : user?.name.split(" ")[0] + ": "}{" "}
+            : user?.name + ": "}{" "}
           {data?.lastMessage}
         </p>
       </div>
@@ -335,6 +339,7 @@ const SellerInbox = ({
   activeStatus,
   handleImageUpload,
 }) => {
+  console.log(messages);
   return (
     <div className="w-full min-h-full flex flex-col justify-between">
       {/* message header */}
@@ -375,9 +380,9 @@ const SellerInbox = ({
                     alt=""
                   />
                 )}
-                {item.images && item.images.length > 0 && (
+                {item.images && (
                   <img
-                    src={`${backend_url + item.images?.url}`}
+                    src={`${backend_url + item.images}`}
                     className="w-[300px] h-[300px] object-cover rounded-[10px] mr-2"
                   />
                 )}
