@@ -54,7 +54,7 @@ function Header({ activeHeading }) {
 
   return (
     <>
-      <div className="bg-white border-b border-gray-100 shadow-sm">
+      <div className="bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700 shadow-sm">
         <div className={`${styles.section}`}>
           <div className="hidden 800px:h-[80px] 800px:py-4 800px:flex items-center justify-between">
             <div className="flex items-center">
@@ -105,7 +105,7 @@ function Header({ activeHeading }) {
               ) : null}
             </div>
 
-            <div className="flex items-center">
+            <div className="flex items-center mr-5">
               <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
                 <button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-medium flex items-center space-x-2 shadow-md hover:shadow-lg">
                   <span>{isSeller ? "Go Dashboard" : "Become Seller"}</span>
@@ -113,20 +113,77 @@ function Header({ activeHeading }) {
                 </button>
               </Link>
             </div>
+
+            <div className="flex items-center space-x-6">
+              <div
+                className="relative cursor-pointer group"
+                onClick={() => setOpenWishList(true)}
+              >
+                <AiOutlineHeart
+                  size={26}
+                  className="text-white/80 group-hover:text-white group-hover:scale-110"
+                />
+                <span className="absolute -right-2 -top-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {wishlist && wishlist.length}
+                </span>
+              </div>
+
+              <div
+                className="relative cursor-pointer group"
+                onClick={() => setOpenCart(true)}
+              >
+                <AiOutlineShoppingCart
+                  size={26}
+                  className="text-white/80 group-hover:text-white group-hover:scale-110"
+                />
+                <span className="absolute -right-2 -top-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {cart && cart.length}
+                </span>
+              </div>
+
+              <div className="relative cursor-pointer">
+                {isAuthenticated ? (
+                  <Link to="/profile" className="block">
+                    <img
+                      src={`${user?.avatar?.url}`}
+                      className="w-9 h-9 rounded-full border-2 border-white/20 hover:border-white/40 object-cover"
+                      alt="Profile"
+                    />
+                  </Link>
+                ) : (
+                  <Link to="/login" className="group">
+                    <CgProfile
+                      size={26}
+                      className="text-white/80 group-hover:text-white group-hover:scale-110"
+                    />
+                  </Link>
+                )}
+              </div>
+
+              {/* cart popup */}
+              {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
+
+              {/* WishList popup */}
+              {openWishList ? (
+                <Wishlist setOpenWishList={setOpenWishList} />
+              ) : null}
+            </div>
           </div>
         </div>
       </div>
 
       <div
         className={`${
-          active ? "shadow-lg fixed top-0 left-0 z-50" : ""
-        } hidden 800px:flex items-center justify-between w-full bg-gradient-to-r from-slate-900 to-slate-800 h-[70px] border-b border-slate-700`}
+          active
+            ? "bg-gradient-to-r from-slate-900 to-slate-800 shadow-lg fixed top-0 left-0 z-50 h-[60px]"
+            : ""
+        } hidden 800px:flex items-center justify-between w-full h-[50px] border-b border-slate-700 bg-[#232F3E]`}
       >
         <div
           className={`${styles.section} relative ${styles.normalFlex} justify-between`}
         >
           <div onClick={() => setDropDown(!dropdown)}>
-            <div className="relative h-[50px] mt-[10px] w-[270px] hidden 1000px:block">
+            <div className="relative h-[30px]  w-[205px] hidden 1000px:block">
               <div className="h-full w-full flex items-center pl-4 pr-12 bg-white hover:bg-gray-50 font-medium text-gray-700 select-none rounded-lg cursor-pointer shadow-sm border border-gray-200">
                 <BiMenuAltLeft className="mr-3 text-gray-600" size={24} />
                 <span>All Categories</span>
@@ -148,60 +205,62 @@ function Header({ activeHeading }) {
             <Navbar active={activeHeading} />
           </div>
 
-          <div className="flex items-center space-x-6">
-            <div
-              className="relative cursor-pointer group"
-              onClick={() => setOpenWishList(true)}
-            >
-              <AiOutlineHeart
-                size={26}
-                className="text-white/80 group-hover:text-white group-hover:scale-110"
-              />
-              <span className="absolute -right-2 -top-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                {wishlist && wishlist.length}
-              </span>
+          {active && (
+            <div className="flex items-center space-x-6">
+              <div
+                className="relative cursor-pointer group"
+                onClick={() => setOpenWishList(true)}
+              >
+                <AiOutlineHeart
+                  size={26}
+                  className="text-white/80 group-hover:text-white group-hover:scale-110"
+                />
+                <span className="absolute -right-2 -top-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {wishlist && wishlist.length}
+                </span>
+              </div>
+
+              <div
+                className="relative cursor-pointer group"
+                onClick={() => setOpenCart(true)}
+              >
+                <AiOutlineShoppingCart
+                  size={26}
+                  className="text-white/80 group-hover:text-white group-hover:scale-110"
+                />
+                <span className="absolute -right-2 -top-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {cart && cart.length}
+                </span>
+              </div>
+
+              <div className="relative cursor-pointer">
+                {isAuthenticated ? (
+                  <Link to="/profile" className="block">
+                    <img
+                      src={`${user?.avatar?.url}`}
+                      className="w-9 h-9 rounded-full border-2 border-white/20 hover:border-white/40 object-cover"
+                      alt="Profile"
+                    />
+                  </Link>
+                ) : (
+                  <Link to="/login" className="group">
+                    <CgProfile
+                      size={26}
+                      className="text-white/80 group-hover:text-white group-hover:scale-110"
+                    />
+                  </Link>
+                )}
+              </div>
+
+              {/* cart popup */}
+              {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
+
+              {/* WishList popup */}
+              {openWishList ? (
+                <Wishlist setOpenWishList={setOpenWishList} />
+              ) : null}
             </div>
-
-            <div
-              className="relative cursor-pointer group"
-              onClick={() => setOpenCart(true)}
-            >
-              <AiOutlineShoppingCart
-                size={26}
-                className="text-white/80 group-hover:text-white group-hover:scale-110"
-              />
-              <span className="absolute -right-2 -top-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                {cart && cart.length}
-              </span>
-            </div>
-
-            <div className="relative cursor-pointer">
-              {isAuthenticated ? (
-                <Link to="/profile" className="block">
-                  <img
-                    src={`${user?.avatar?.url}`}
-                    className="w-9 h-9 rounded-full border-2 border-white/20 hover:border-white/40 object-cover"
-                    alt="Profile"
-                  />
-                </Link>
-              ) : (
-                <Link to="/login" className="group">
-                  <CgProfile
-                    size={26}
-                    className="text-white/80 group-hover:text-white group-hover:scale-110"
-                  />
-                </Link>
-              )}
-            </div>
-
-            {/* cart popup */}
-            {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
-
-            {/* WishList popup */}
-            {openWishList ? (
-              <Wishlist setOpenWishList={setOpenWishList} />
-            ) : null}
-          </div>
+          )}
         </div>
       </div>
 
@@ -209,13 +268,13 @@ function Header({ activeHeading }) {
         className={`${
           active === true ? "shadow-lg fixed top-0 left-0 z-50" : ""
         }
-      w-full h-[70px] bg-white z-50 top-0 left-0 border-b border-gray-100 800px:hidden`}
+      w-full h-[70px] bg-white z-50 top-0 left-0  800px:hidden bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700 shadow-sm`}
       >
         <div className="w-full flex items-center justify-between px-4 h-full">
           <div>
             <BiMenuAltLeft
               size={28}
-              className="text-gray-700 hover:text-gray-900"
+              className="text-white/80 group-hover:text-white group-hover:scale-110 cursor-pointer"
               onClick={() => setOpen(true)}
             />
           </div>
@@ -235,7 +294,7 @@ function Header({ activeHeading }) {
             >
               <AiOutlineShoppingCart
                 size={26}
-                className="text-gray-700 group-hover:text-gray-900"
+                className="text-white/80 group-hover:text-white group-hover:scale-110"
               />
               <span className="absolute -right-2 -top-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                 {cart && cart.length}
@@ -252,20 +311,23 @@ function Header({ activeHeading }) {
 
         {open && (
           <div className="fixed w-full bg-black/50 backdrop-blur-sm z-50 h-full top-0 left-0">
-            <div className="fixed w-[85%] max-w-sm bg-white h-screen top-0 left-0 z-50 overflow-y-auto shadow-2xl">
+            <div className="fixed w-[85%] max-w-sm border-b text-white border-slate-700 bg-[#232F3E] h-screen top-0 left-0 z-50 overflow-y-auto shadow-2xl">
               <div className="flex items-center justify-between p-4 border-b border-gray-100">
                 <div
                   className="relative cursor-pointer"
                   onClick={() => setOpenWishList(true) || setOpen(false)}
                 >
-                  <AiOutlineHeart size={24} className="text-gray-700" />
+                  <AiOutlineHeart
+                    size={24}
+                    className="text-white/80 group-hover:text-white group-hover:scale-110"
+                  />
                   <span className="absolute -right-2 -top-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                     {wishlist && wishlist.length}
                   </span>
                 </div>
                 <RxCross1
                   size={24}
-                  className="text-gray-700 hover:text-gray-900 cursor-pointer"
+                  className="text-white/80 group-hover:text-white group-hover:scale-110 cursor-pointer"
                   onClick={() => setOpen(false)}
                 />
               </div>
