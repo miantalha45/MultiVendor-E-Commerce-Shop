@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import styles from "../../styles/style";
-import { AiOutlineMoneyCollect } from "react-icons/ai";
-import { MdBorderClear } from "react-icons/md";
+import { useEffect } from "react";
+import { AiOutlineMoneyCollect, AiOutlineShoppingCart } from "react-icons/ai";
+import { HiOutlineUserGroup } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,12 +24,10 @@ const AdminDashboardMain = () => {
   const adminEarning =
     adminOrders &&
     adminOrders.reduce((acc, item) => acc + item.totalPrice * 0.1, 0);
-
   const adminBalance = adminEarning?.toFixed(2);
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-
     {
       field: "status",
       headerName: "Status",
@@ -47,7 +44,6 @@ const AdminDashboardMain = () => {
       minWidth: 130,
       flex: 0.7,
     },
-
     {
       field: "total",
       headerName: "Total",
@@ -76,81 +72,144 @@ const AdminDashboardMain = () => {
       });
     });
 
+  const statsCards = [
+    {
+      title: "Total Earnings",
+      value: `$${adminBalance}`,
+      icon: AiOutlineMoneyCollect,
+      color: "bg-green-50 text-green-600",
+      iconBg: "bg-green-100",
+    },
+    {
+      title: "All Sellers",
+      value: sellers?.length || 0,
+      icon: HiOutlineUserGroup,
+      color: "bg-blue-50 text-blue-600",
+      iconBg: "bg-blue-100",
+      link: "/admin-sellers",
+      linkText: "View Sellers",
+    },
+    {
+      title: "All Orders",
+      value: adminOrders?.length || 0,
+      icon: AiOutlineShoppingCart,
+      color: "bg-purple-50 text-purple-600",
+      iconBg: "bg-purple-100",
+      link: "/admin-orders",
+      linkText: "View Orders",
+    },
+  ];
+
   return (
     <>
       {adminOrderLoading ? (
         <Loader />
       ) : (
-        <div className="w-full p-4">
-          <h3 className="text-[22px] font-Poppins pb-2">Overview</h3>
-          <div className="w-full block 800px:flex items-center justify-between">
-            <div className="w-full mb-4 800px:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
-              <div className="flex items-center">
-                <AiOutlineMoneyCollect
-                  size={30}
-                  className="mr-2"
-                  fill="#00000085"
-                />
-                <h3
-                  className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
-                >
-                  Total Earning
-                </h3>
-              </div>
-              <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
-                $ {adminBalance}
-              </h5>
-            </div>
-
-            <div className="w-full mb-4 800px:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
-              <div className="flex items-center">
-                <MdBorderClear size={30} className="mr-2" fill="#00000085" />
-                <h3
-                  className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
-                >
-                  All Sellers
-                </h3>
-              </div>
-              <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
-                {sellers && sellers.length}
-              </h5>
-              <Link to="/admin-sellers">
-                <h5 className="pt-4 pl-2 text-[#077f9c]">View Sellers</h5>
-              </Link>
-            </div>
-
-            <div className="w-full mb-4 800px:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
-              <div className="flex items-center">
-                <AiOutlineMoneyCollect
-                  size={30}
-                  className="mr-2"
-                  fill="#00000085"
-                />
-                <h3
-                  className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
-                >
-                  All Orders
-                </h3>
-              </div>
-              <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
-                {adminOrders && adminOrders.length}
-              </h5>
-              <Link to="/admin-orders">
-                <h5 className="pt-4 pl-2 text-[#077f9c]">View Orders</h5>
-              </Link>
-            </div>
+        <div className="p-6 space-y-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Dashboard Overview
+            </h1>
+            <p className="text-gray-600">
+              Welcome back! Here's what's happening with your platform.
+            </p>
           </div>
 
-          <br />
-          <h3 className="text-[22px] font-Poppins pb-2">Latest Orders</h3>
-          <div className="w-full min-h-[45vh] bg-white rounded">
-            <DataGrid
-              rows={row}
-              columns={columns}
-              pageSize={4}
-              disableSelectionOnClick
-              autoHeight
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {statsCards.map((card, index) => {
+              const Icon = card.icon;
+              return (
+                <div
+                  key={index}
+                  className="bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg transition-shadow"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className={`p-3 rounded-xl ${card.iconBg}`}>
+                      <Icon size={24} className={card.color.split(" ")[1]} />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-gray-600">
+                      {card.title}
+                    </p>
+                    <p className="text-3xl font-bold text-gray-900">
+                      {card.value}
+                    </p>
+
+                    {card.link && (
+                      <Link
+                        to={card.link}
+                        className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700 mt-2"
+                      >
+                        {card.linkText}
+                        <svg
+                          className="w-4 h-4 ml-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900">
+                Latest Orders
+              </h2>
+              <p className="text-sm text-gray-600 mt-1">
+                Recent orders from your platform
+              </p>
+            </div>
+
+            <div className="p-6">
+              {row.length > 0 ? (
+                <div className="h-96">
+                  <DataGrid
+                    rows={row}
+                    columns={columns}
+                    pageSize={5}
+                    disableSelectionOnClick
+                    autoHeight
+                    sx={{
+                      border: "none",
+                      "& .MuiDataGrid-cell": {
+                        borderBottom: "1px solid #f3f4f6",
+                      },
+                      "& .MuiDataGrid-columnHeaders": {
+                        backgroundColor: "#f9fafb",
+                        borderBottom: "1px solid #e5e7eb",
+                      },
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <AiOutlineShoppingCart
+                    size={48}
+                    className="text-gray-400 mx-auto mb-4"
+                  />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    No orders yet
+                  </h3>
+                  <p className="text-gray-600">
+                    Orders will appear here once customers start purchasing.
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

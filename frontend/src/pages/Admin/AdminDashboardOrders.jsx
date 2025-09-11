@@ -4,6 +4,7 @@ import AdminSideBar from "../../components/Admin/Layout/AdminSideBar";
 import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllOrdersOfAdmin } from "../../redux/actions/order";
+import { MdOutlineLocalOffer } from "react-icons/md";
 
 const AdminDashboardOrders = () => {
   const dispatch = useDispatch();
@@ -66,21 +67,46 @@ const AdminDashboardOrders = () => {
   return (
     <div>
       <AdminHeader />
-      <div className="w-full flex">
-        <div className="flex items-start justify-between w-full">
-          <div className="w-[80px] 800px:w-[330px]">
+      <div className="max-w-7xl">
+        <div className="flex gap-6">
+          <div className="w-80 sticky top-8 h-fit">
             <AdminSideBar active={2} />
           </div>
+          <div className="flex-1">
+            <div className="p-6">
+              <div className="mb-6">
+                <div className="flex items-center space-x-3 mb-2">
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    All Orders
+                  </h2>
+                </div>
+              </div>
 
-          <div className="w-full min-h-[45vh] pt-5 rounded flex justify-center">
-            <div className="w-[97%] flex justify-center">
-              <DataGrid
-                rows={row}
-                columns={columns}
-                pageSize={4}
-                disableSelectionOnClick
-                autoHeight
-              />
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
+                <DataGrid
+                  rows={row}
+                  columns={columns}
+                  pageSize={10}
+                  disableSelectionOnClick
+                  autoHeight
+                  sx={{
+                    border: "none",
+                    "& .MuiDataGrid-cell": {
+                      borderBottom: "1px solid #f3f4f6",
+                      fontSize: "14px",
+                    },
+                    "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: "#f9fafb",
+                      borderBottom: "1px solid #e5e7eb",
+                      fontSize: "14px",
+                      fontWeight: 600,
+                    },
+                    "& .MuiDataGrid-row:hover": {
+                      backgroundColor: "#f9fafb",
+                    },
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>

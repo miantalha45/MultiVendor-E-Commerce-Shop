@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../../styles/style";
 import {
@@ -8,7 +8,7 @@ import {
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { backend_url, server } from "../../server";
+import { server } from "../../server";
 import { addToCart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
 import { getAllProductsShop } from "../../redux/actions/product";
@@ -261,130 +261,144 @@ const ProductDetailsInfo = ({
       <div className="w-full flex justify-between border-b pt-10 pb-2">
         <div className="relative">
           <h5
-            className={
-              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
-            }
+            className={`text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px] transition-colors duration-300 ${
+              active === 1
+                ? "text-[#6443d1]"
+                : "text-[#000] hover:text-[#6443d1]"
+            }`}
             onClick={() => setActive(1)}
           >
             Product Details
           </h5>
-          {active === 1 ? (
-            <div className={`${styles.active_indicator}`} />
-          ) : null}
+          <div
+            className={`absolute bottom-[-8px] left-0 h-[3px] bg-[#6443d1] rounded-full transition-all duration-300 ease-in-out ${
+              active === 1 ? "w-full opacity-100" : "w-0 opacity-0"
+            }`}
+          />
         </div>
         <div className="relative">
           <h5
-            className={
-              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
-            }
+            className={`text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px] transition-colors duration-300 ${
+              active === 2
+                ? "text-[#6443d1]"
+                : "text-[#000] hover:text-[#6443d1]"
+            }`}
             onClick={() => setActive(2)}
           >
             Product Reviews
           </h5>
-          {active === 2 ? (
-            <div className={`${styles.active_indicator}`} />
-          ) : null}
+          <div
+            className={`absolute bottom-[-8px] left-0 h-[3px] bg-[#6443d1] rounded-full transition-all duration-300 ease-in-out ${
+              active === 2 ? "w-full opacity-100" : "w-0 opacity-0"
+            }`}
+          />
         </div>
         <div className="relative">
           <h5
-            className={
-              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
-            }
+            className={`text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px] transition-colors duration-300 ${
+              active === 3
+                ? "text-[#6443d1]"
+                : "text-[#000] hover:text-[#6443d1]"
+            }`}
             onClick={() => setActive(3)}
           >
             Seller Information
           </h5>
-          {active === 3 ? (
-            <div className={`${styles.active_indicator}`} />
-          ) : null}
+          <div
+            className={`absolute bottom-[-8px] left-0 h-[3px] bg-[#6443d1] rounded-full transition-all duration-300 ease-in-out ${
+              active === 3 ? "w-full opacity-100" : "w-0 opacity-0"
+            }`}
+          />
         </div>
       </div>
-      {active === 1 ? (
-        <>
-          <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
-            {data.description}
-          </p>
-        </>
-      ) : null}
+      <div className="relative overflow-hidden">
+        {active === 1 && (
+          <div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-300">
+            <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
+              {data.description}
+            </p>
+          </div>
+        )}
 
-      {active === 2 ? (
-        <div className="w-full min-h-[40vh] flex flex-col items-center py-3 overflow-y-scroll">
-          {data &&
-            data.reviews &&
-            data.reviews.map((item, index) => (
-              <div className="w-full flex my-2">
-                <img
-                  src={`${item.user.avatar?.url}`}
-                  alt=""
-                  className="w-[50px] h-[50px] rounded-full"
-                />
-                <div className="pl-2 ">
-                  <div className="w-full flex items-center">
-                    <h1 className="font-[500] mr-3">{item.user.name}</h1>
-                    <Ratings rating={data?.ratings} />
+        {active === 2 && (
+          <div className="w-full min-h-[40vh] flex flex-col items-center py-3 overflow-y-scroll animate-in fade-in-0 slide-in-from-bottom-4 duration-300">
+            {data &&
+              data.reviews &&
+              data.reviews.map((item, index) => (
+                <div key={index} className="w-full flex my-2">
+                  <img
+                    src={`${item.user.avatar?.url}`}
+                    alt=""
+                    className="w-[50px] h-[50px] rounded-full"
+                  />
+                  <div className="pl-2 ">
+                    <div className="w-full flex items-center">
+                      <h1 className="font-[500] mr-3">{item.user.name}</h1>
+                      <Ratings rating={data?.ratings} />
+                    </div>
+                    <p>{item.comment}</p>
                   </div>
-                  <p>{item.comment}</p>
                 </div>
-              </div>
-            ))}
+              ))}
 
-          <div className="w-full flex justify-center">
-            {data && data.reviews && data.reviews.length === 0 && (
-              <h5>No Reviews have for this product!</h5>
-            )}
-          </div>
-        </div>
-      ) : null}
-
-      {active === 3 && (
-        <div className="w-full block 800px:flex p-5">
-          <div className="w-full 800px:w-[50%]">
-            <Link to={`/shop/preview/${data.shop._id}`}>
-              <div className="flex items-center">
-                <img
-                  src={`${data?.shop?.avatar?.url}`}
-                  className="w-[50px] h-[50px] rounded-full"
-                  alt=""
-                />
-                <div className="pl-3">
-                  <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
-                  <h5 className="pb-2 text-[15px]">
-                    ({averageRating}/5) Ratings
-                  </h5>
-                </div>
-              </div>
-            </Link>
-            <p className="pt-2">{data.shop.description}</p>
-          </div>
-          <div className="w-full 800px:w-[50%] mt-5 800px:mt-0 800px:flex flex-col items-end">
-            <div className="text-left">
-              <h5 className="font-[600]">
-                Joined on:{" "}
-                <span className="font-[500]">
-                  {data.shop?.createdAt?.slice(0, 10)}
-                </span>
-              </h5>
-              <h5 className="font-[600] pt-3">
-                Total Products:{" "}
-                <span className="font-[500]">
-                  {products && products.length}
-                </span>
-              </h5>
-              <h5 className="font-[600] pt-3">
-                Total Reviews:{" "}
-                <span className="font-[500]">{totalReviewsLength}</span>
-              </h5>
-              <Link to={`/shop/preview/${data.shop._id}`}>
-                <div
-                  className={`${styles.button} !rounded-[4px] !h-[39.5px] mt-3`}
-                >
-                  <h4 className="text-white">Visit Shop</h4>
-                </div>
-              </Link>
+            <div className="w-full flex justify-center">
+              {data && data.reviews && data.reviews.length === 0 && (
+                <h5>No Reviews have for this product!</h5>
+              )}
             </div>
           </div>
-        </div>
-      )}
+        )}
+
+        {active === 3 && (
+          <div className="w-full block 800px:flex p-5 animate-in fade-in-0 slide-in-from-bottom-4 duration-300">
+            <div className="w-full 800px:w-[50%]">
+              <Link to={`/shop/preview/${data.shop._id}`}>
+                <div className="flex items-center">
+                  <img
+                    src={`${data?.shop?.avatar?.url}`}
+                    className="w-[50px] h-[50px] rounded-full"
+                    alt=""
+                  />
+                  <div className="pl-3">
+                    <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
+                    <h5 className="pb-2 text-[15px]">
+                      ({averageRating}/5) Ratings
+                    </h5>
+                  </div>
+                </div>
+              </Link>
+              <p className="pt-2">{data.shop.description}</p>
+            </div>
+            <div className="w-full 800px:w-[50%] mt-5 800px:mt-0 800px:flex flex-col items-end">
+              <div className="text-left">
+                <h5 className="font-[600]">
+                  Joined on:{" "}
+                  <span className="font-[500]">
+                    {data.shop?.createdAt?.slice(0, 10)}
+                  </span>
+                </h5>
+                <h5 className="font-[600] pt-3">
+                  Total Products:{" "}
+                  <span className="font-[500]">
+                    {products && products.length}
+                  </span>
+                </h5>
+                <h5 className="font-[600] pt-3">
+                  Total Reviews:{" "}
+                  <span className="font-[500]">{totalReviewsLength}</span>
+                </h5>
+                <Link to={`/shop/preview/${data.shop._id}`}>
+                  <div
+                    className={`${styles.button} !rounded-[4px] !h-[39.5px] mt-3`}
+                  >
+                    <h4 className="text-white">Visit Shop</h4>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

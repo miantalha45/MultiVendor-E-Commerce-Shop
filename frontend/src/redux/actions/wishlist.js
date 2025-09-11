@@ -1,5 +1,3 @@
-
-
 // add to wishlist
 export const addToWishlist = (data) => async (dispatch, getState) => {
     dispatch({

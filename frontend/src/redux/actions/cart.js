@@ -1,5 +1,3 @@
-
-
 // add to cart
 export const addToCart = (data) => async (dispatch, getState) => {
     dispatch({

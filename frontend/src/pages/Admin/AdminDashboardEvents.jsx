@@ -7,12 +7,14 @@ const AdminDashboardEvents = () => {
   return (
     <div>
       <AdminHeader />
-      <div className="w-full flex">
-        <div className="flex items-start justify-between w-full">
-          <div className="w-[80px] 800px:w-[330px]">
+      <div className="max-w-7xl">
+        <div className="flex gap-6">
+          <div className="w-80 sticky top-8 h-fit">
             <AdminSideBar active={6} />
           </div>
-          <AllEvents />
+          <div className="flex-1">
+            <AllEvents />
+          </div>
         </div>
       </div>
     </div>

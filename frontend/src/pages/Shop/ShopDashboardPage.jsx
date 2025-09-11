@@ -7,11 +7,16 @@ function ShopDashboardPage() {
   return (
     <div>
       <DashboardHeader />
-      <div className="w-full flex items-center justify-between">
-        <div className="w-[80px] 800px:w-[330px]">
-          <DashboardSideBar active={1} />
+
+      <div className="max-w-7xl">
+        <div className="flex gap-6">
+          <div className="w-80 sticky top-8 h-fit">
+            <DashboardSideBar active={1} />
+          </div>
+          <div className="flex-1">
+            <DashboardHero />
+          </div>
         </div>
-        <DashboardHero />
       </div>
     </div>
   );

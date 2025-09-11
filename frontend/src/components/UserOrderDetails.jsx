@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllOrdersOfUser } from "../redux/actions/order";
 import { useState } from "react";
 import { useEffect } from "react";
-import { backend_url, server } from "../server";
+import { server } from "../server";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
@@ -92,11 +92,11 @@ const UserOrderDetails = () => {
       <br />
       {data &&
         data?.cart.map((item, index) => (
-          <div className="w-full flex items-start mb-5">
+          <div key={index} className="w-full flex items-start mb-5">
             <img
               src={`${item.images[0]?.url}`}
               alt=""
-              className="w-[80x] h-[80px]"
+              className="w-[80px] h-[80px]"
             />
             <div className="w-full">
               <h5 className="pl-3 text-[20px]">{item.name}</h5>
@@ -117,13 +117,13 @@ const UserOrderDetails = () => {
 
       {/* review popup */}
       {open && (
-        <div className="w-full fixed top-0 left-0 h-screen bg-[#0005] z-50 flex items-center justify-center">
-          <div className="w-[50%] h-min bg-[#fff] shadow rounded-md p-3">
+        <div className="w-full fixed top-0 left-0 h-screen bg-[#0005] z-50 flex items-center justify-center animate-in fade-in-0 duration-300">
+          <div className="w-[50%] h-min bg-[#fff] shadow rounded-md p-3 animate-in zoom-in-95 slide-in-from-bottom-4 duration-300">
             <div className="w-full flex justify-end p-3">
               <RxCross1
                 size={30}
                 onClick={() => setOpen(false)}
-                className="cursor-pointer"
+                className="cursor-pointer hover:bg-gray-100 rounded-full p-1 transition-colors duration-200"
               />
             </div>
             <h2 className="text-[30px] font-[500] font-Poppins text-center">

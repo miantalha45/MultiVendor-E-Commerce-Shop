@@ -1,19 +1,22 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Header from "../components/Layout/Header";
-import styles from "../styles/style";
 import ProfileSidebar from "../components/Profile/ProfileSidebar.jsx";
 import ProfileContent from "../components/Profile/ProfileContent.jsx";
 
 function ProfilePage() {
   const [active, setActive] = useState(1);
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       <Header />
-      <div className={`${styles.section} flex bg-[#f5f5f5] py-10 `}>
-        <div className="w-[50px] 800px:w-[335px] sticky 800px:mt-0 mt-[18%]">
-          <ProfileSidebar active={active} setActive={setActive} />
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex gap-6">
+          <div className="w-80 sticky top-8 h-fit">
+            <ProfileSidebar active={active} setActive={setActive} />
+          </div>
+          <div className="flex-1">
+            <ProfileContent active={active} />
+          </div>
         </div>
-        <ProfileContent active={active} />
       </div>
     </div>
   );

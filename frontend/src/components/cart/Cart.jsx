@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import { IoBagHandleOutline } from "react-icons/io5";
 import { HiOutlineMinus, HiPlus } from "react-icons/hi";
@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
-import { backend_url } from "../../server";
 
 const Cart = ({ setOpenCart }) => {
   const { cart } = useSelector((state) => state.cart);
@@ -27,14 +26,14 @@ const Cart = ({ setOpenCart }) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
-      <div className="fixed top-0 right-0 h-full w-[80%] 800px:w-[25%] bg-white flex flex-col overflow-y-scroll justify-between shadow-sm">
+    <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10 animate-in fade-in-0 duration-300">
+      <div className="fixed top-0 right-0 h-full w-[80%] 800px:w-[25%] bg-white flex flex-col overflow-y-scroll justify-between shadow-sm animate-in slide-in-from-right duration-500 ease-out">
         {cart && cart.length === 0 ? (
           <div className="w-full h-screen flex items-center justify-center">
             <div className="flex w-full justify-end pt-5 pr-5 fixed top-3 right-3">
               <RxCross1
                 size={25}
-                className="cursor-pointer"
+                className="cursor-pointer hover:bg-gray-100 rounded-full p-1 transition-colors duration-200"
                 onClick={() => setOpenCart(false)}
               />
             </div>
@@ -46,7 +45,7 @@ const Cart = ({ setOpenCart }) => {
               <div className="flex w-full justify-end pt-5 pr-5">
                 <RxCross1
                   size={25}
-                  className="cursor-pointer"
+                  className="cursor-pointer hover:bg-gray-100 rounded-full p-1 transition-colors duration-200"
                   onClick={() => setOpenCart(false)}
                 />
               </div>
@@ -77,7 +76,7 @@ const Cart = ({ setOpenCart }) => {
               {/* checkout buttons */}
               <Link to="/checkout">
                 <div
-                  className={`h-[45px] flex items-center justify-center w-[100%] bg-[#e44343] rounded-[5px]`}
+                  className={`h-[45px] flex items-center justify-center w-[100%] bg-[#e44343] rounded-[5px] hover:bg-[#d63031] transition-colors duration-200`}
                 >
                   <h1 className="text-[#fff] text-[18px] font-[600]">
                     Checkout Now (USD${totalPrice})

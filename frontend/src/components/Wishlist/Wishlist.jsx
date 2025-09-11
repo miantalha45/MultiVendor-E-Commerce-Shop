@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import { BsCartPlus } from "react-icons/bs";
 import styles from "../../styles/style";
@@ -6,7 +6,6 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFromWishlist } from "../../redux/actions/wishlist";
 import { addToCart } from "../../redux/actions/cart";
-import { backend_url } from "../../server";
 
 const Wishlist = ({ setOpenWishList }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -23,14 +22,14 @@ const Wishlist = ({ setOpenWishList }) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
-      <div className="fixed top-0 right-0 h-full w-[80%] overflow-y-scroll 800px:w-[25%] bg-white flex flex-col justify-between shadow-sm">
+    <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10 animate-in fade-in-0 duration-300">
+      <div className="fixed top-0 right-0 h-full w-[80%] overflow-y-scroll 800px:w-[25%] bg-white flex flex-col justify-between shadow-sm animate-in slide-in-from-right duration-500 ease-out">
         {wishlist && wishlist.length === 0 ? (
           <div className="w-full h-screen flex items-center justify-center">
             <div className="flex w-full justify-end pt-5 pr-5 fixed top-3 right-3">
               <RxCross1
                 size={25}
-                className="cursor-pointer"
+                className="cursor-pointer hover:bg-gray-100 rounded-full p-1 transition-colors duration-200"
                 onClick={() => setOpenWishList(false)}
               />
             </div>
@@ -42,7 +41,7 @@ const Wishlist = ({ setOpenWishList }) => {
               <div className="flex w-full justify-end pt-5 pr-5">
                 <RxCross1
                   size={25}
-                  className="cursor-pointer"
+                  className="cursor-pointer hover:bg-gray-100 rounded-full p-1 transition-colors duration-200"
                   onClick={() => setOpenWishList(false)}
                 />
               </div>

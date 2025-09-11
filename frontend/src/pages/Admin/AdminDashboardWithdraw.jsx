@@ -1,4 +1,3 @@
-import React from "react";
 import AdminHeader from "../../components/Admin/Layout/AdminHeader";
 import AdminSideBar from "../../components/Admin/Layout/AdminSideBar";
 import AllWithdraw from "../../components/Admin/AllWithdraw.jsx";
@@ -7,12 +6,14 @@ const AdminDashboardWithdraw = () => {
   return (
     <div>
       <AdminHeader />
-      <div className="w-full flex">
-        <div className="flex items-start justify-between w-full">
-          <div className="w-[80px] 800px:w-[330px]">
+      <div className="max-w-7xl">
+        <div className="flex gap-6">
+          <div className="w-80 sticky top-8 h-fit">
             <AdminSideBar active={7} />
           </div>
-          <AllWithdraw />
+          <div className="flex-1">
+            <AllWithdraw />
+          </div>
         </div>
       </div>
     </div>

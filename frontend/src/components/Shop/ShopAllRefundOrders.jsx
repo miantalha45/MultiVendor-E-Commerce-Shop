@@ -90,14 +90,42 @@ const ShopAllRefundOrders = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="w-full mx-8 pt-1 mt-10 bg-white flex flex-col">
-          <DataGrid
-            rows={row}
-            columns={columns}
-            pageSize={10}
-            disableSelectionOnClick
-            // autoHeight
-          />
+        <div className="flex-1">
+          <div className="p-6">
+            <div className="mb-6">
+              <div className="flex items-center space-x-3 mb-2">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  All Refunds
+                </h2>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
+              <DataGrid
+                rows={row}
+                columns={columns}
+                pageSize={10}
+                disableSelectionOnClick
+                autoHeight
+                sx={{
+                  border: "none",
+                  "& .MuiDataGrid-cell": {
+                    borderBottom: "1px solid #f3f4f6",
+                    fontSize: "14px",
+                  },
+                  "& .MuiDataGrid-columnHeaders": {
+                    backgroundColor: "#f9fafb",
+                    borderBottom: "1px solid #e5e7eb",
+                    fontSize: "14px",
+                    fontWeight: 600,
+                  },
+                  "& .MuiDataGrid-row:hover": {
+                    backgroundColor: "#f9fafb",
+                  },
+                }}
+              />
+            </div>
+          </div>
         </div>
       )}
     </>

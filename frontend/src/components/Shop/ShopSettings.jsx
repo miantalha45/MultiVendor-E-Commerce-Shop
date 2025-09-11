@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { backend_url, server } from "../../server";
 import { AiOutlineCamera } from "react-icons/ai";
-import styles from "../../styles/style";
 import axios from "axios";
 import { loadSeller } from "../../redux/actions/user";
 import { toast } from "react-toastify";
@@ -72,116 +71,128 @@ const ShopSettings = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center">
-      <div className="flex w-full 800px:w-[80%] flex-col justify-center my-5">
-        <div className="w-full flex items-center justify-center">
-          <div className="relative">
-            <img
-              src={avatar ? avatar : `${seller.avatar?.url}`}
-              alt=""
-              className="w-[200px] h-[200px] rounded-full cursor-pointer"
-            />
-            <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[10px] right-[15px]">
-              <input
-                type="file"
-                id="image"
-                className="hidden"
-                onChange={handleImage}
+    <div className="w-full bg-white rounded-2xl shadow-lg border border-gray-200 ">
+      <div className=" min-h-screen flex flex-col items-center">
+        <div className="flex w-full 800px:w-[80%] flex-col justify-center my-5">
+          <div className="flex justify-center mb-8">
+            <div className="relative group">
+              <img
+                src={avatar ? avatar : `${seller.avatar?.url}`}
+                className="w-32 h-32 rounded-full object-cover border-4 border-blue-100 shadow-lg"
+                alt=""
               />
-              <label htmlFor="image">
-                <AiOutlineCamera />
-              </label>
+              <div className="absolute inset-0 bg-black bg-opacity-40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                <input
+                  type="file"
+                  id="image"
+                  className="hidden"
+                  onChange={handleImage}
+                />
+                <label htmlFor="image" className="cursor-pointer">
+                  <AiOutlineCamera size={24} className="text-white" />
+                </label>
+              </div>
             </div>
           </div>
+
+          {/* shop info */}
+          <form
+            aria-aria-required={true}
+            className="flex flex-col items-center"
+            onSubmit={updateHandler}
+          >
+            <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
+              <div className="w-full pl-[3%]">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Shop Name
+                </label>
+              </div>
+              <input
+                type="name"
+                placeholder={`${seller.name}`}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                required
+              />
+            </div>
+            <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
+              <div className="w-full pl-[3%]">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Shop description
+                </label>
+              </div>
+              <input
+                type="name"
+                placeholder={`${
+                  seller?.description
+                    ? seller.description
+                    : "Enter your shop description"
+                }`}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+            </div>
+            <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
+              <div className="w-full pl-[3%]">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Shop Address
+                </label>
+              </div>
+              <input
+                type="name"
+                placeholder={seller?.address}
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                required
+              />
+            </div>
+
+            <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
+              <div className="w-full pl-[3%]">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Shop Phone Number
+                </label>
+              </div>
+              <input
+                type="number"
+                placeholder={seller?.phoneNumber}
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                required
+              />
+            </div>
+
+            <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
+              <div className="w-full pl-[3%]">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Shop Zip Code
+                </label>
+              </div>
+              <input
+                type="number"
+                placeholder={seller?.zipCode}
+                value={zipCode}
+                onChange={(e) => setZipcode(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                required
+              />
+            </div>
+
+            <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
+              <input
+                type="submit"
+                value="Update Shop"
+                className="px-8 py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200"
+                required
+                readOnly
+              />
+            </div>
+          </form>
         </div>
-
-        {/* shop info */}
-        <form
-          aria-aria-required={true}
-          className="flex flex-col items-center"
-          onSubmit={updateHandler}
-        >
-          <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
-            <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop Name</label>
-            </div>
-            <input
-              type="name"
-              placeholder={`${seller.name}`}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
-            />
-          </div>
-          <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
-            <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop description</label>
-            </div>
-            <input
-              type="name"
-              placeholder={`${
-                seller?.description
-                  ? seller.description
-                  : "Enter your shop description"
-              }`}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-            />
-          </div>
-          <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
-            <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop Address</label>
-            </div>
-            <input
-              type="name"
-              placeholder={seller?.address}
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
-            />
-          </div>
-
-          <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
-            <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop Phone Number</label>
-            </div>
-            <input
-              type="number"
-              placeholder={seller?.phoneNumber}
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
-            />
-          </div>
-
-          <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
-            <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop Zip Code</label>
-            </div>
-            <input
-              type="number"
-              placeholder={seller?.zipCode}
-              value={zipCode}
-              onChange={(e) => setZipcode(e.target.value)}
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
-            />
-          </div>
-
-          <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
-            <input
-              type="submit"
-              value="Update Shop"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0 cursor-pointer`}
-              required
-              readOnly
-            />
-          </div>
-        </form>
       </div>
     </div>
   );

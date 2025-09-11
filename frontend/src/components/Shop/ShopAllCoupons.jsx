@@ -134,13 +134,42 @@ const ShopAllCoupons = () => {
               <span className="text-white">Create Coupon Code</span>
             </div>
           </div>
-          <DataGrid
-            rows={row}
-            columns={columns}
-            pageSize={10}
-            disableSelectionOnClick
-            // autoHeight
-          />
+          <div className="flex-1">
+            <div className="p-6">
+              <div className="mb-6">
+                <div className="flex items-center space-x-3 mb-2">
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    All Coupons
+                  </h2>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
+                <DataGrid
+                  rows={row}
+                  columns={columns}
+                  pageSize={10}
+                  disableSelectionOnClick
+                  sx={{
+                    border: "none",
+                    "& .MuiDataGrid-cell": {
+                      borderBottom: "1px solid #f3f4f6",
+                      fontSize: "14px",
+                    },
+                    "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: "#f9fafb",
+                      borderBottom: "1px solid #e5e7eb",
+                      fontSize: "14px",
+                      fontWeight: 600,
+                    },
+                    "& .MuiDataGrid-row:hover": {
+                      backgroundColor: "#f9fafb",
+                    },
+                  }}
+                />
+              </div>
+            </div>
+          </div>
 
           {open && (
             <div className="fixed top-0 left-0 w-full h-screen bg-[#00000062] z-[20000] flex items-center justify-center">
