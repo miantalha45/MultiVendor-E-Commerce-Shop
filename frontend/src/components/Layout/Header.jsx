@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import Cart from "../cart/Cart.jsx";
 import Wishlist from "../Wishlist/Wishlist.jsx";
 import { RxCross1 } from "react-icons/rx";
+import logo from "../../assets/logo.png";
 
 function Header({ activeHeading }) {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -57,13 +58,9 @@ function Header({ activeHeading }) {
       <div className="bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700 shadow-sm">
         <div className={`${styles.section}`}>
           <div className="hidden 800px:h-[80px] 800px:py-4 800px:flex items-center justify-between">
-            <div className="flex items-center">
-              <Link to="/" className="flex items-center">
-                <img
-                  src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-                  alt="Logo"
-                  className="h-10 w-auto"
-                />
+            <div className="w-[145px]">
+              <Link to="/">
+                <img src={logo} alt="Logo" />
               </Link>
             </div>
 
@@ -280,11 +277,7 @@ function Header({ activeHeading }) {
           </div>
           <div>
             <Link to="/">
-              <img
-                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-                alt="Logo"
-                className="h-8 w-auto"
-              />
+              <img src={logo} alt="Logo" className="h-16 w-auto" />
             </Link>
           </div>
           <div>

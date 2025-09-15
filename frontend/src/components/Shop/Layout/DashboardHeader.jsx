@@ -1,29 +1,35 @@
-import { AiOutlineGift } from "react-icons/ai"
-import { MdOutlineLocalOffer } from "react-icons/md"
-import { FiPackage, FiShoppingBag } from "react-icons/fi"
-import { useSelector } from "react-redux"
-import { Link } from "react-router-dom"
-import { BiMessageSquareDetail } from "react-icons/bi"
+import { AiOutlineGift } from "react-icons/ai";
+import { MdOutlineLocalOffer } from "react-icons/md";
+import { FiPackage, FiShoppingBag } from "react-icons/fi";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { BiMessageSquareDetail } from "react-icons/bi";
+import logo from "../../../assets/logo.png";
 
 function DashboardHeader() {
-  const { seller } = useSelector((state) => state.seller)
+  const { seller } = useSelector((state) => state.seller);
 
   return (
-    <div className="w-full h-16 bg-white border-b border-gray-200 sticky top-0 left-0 z-30 flex items-center justify-between px-6 shadow-sm">
+    <div className="w-full h-16 bg-[#1A263A] border-b border-gray-200 sticky top-0 left-0 z-30 flex items-center justify-between px-6 shadow-sm">
       <div className="flex items-center">
         <Link to="/dashboard" className="flex items-center">
-          <img src="https://shopo.quomodothemes.website/assets/images/logo.svg" alt="Logo" className="h-8 w-auto" />
-          <span className="ml-3 text-lg font-semibold text-gray-900 hidden sm:block">Seller Dashboard</span>
+          <img src={logo} alt="Logo" className="h-14 w-auto" />
+          <span className="ml-3 text-lg font-semibold text-white hidden sm:block">
+            Seller Dashboard
+          </span>
         </Link>
       </div>
 
       <div className="flex items-center space-x-1">
         <Link
-          to="/dashboard/cupouns"
+          to="/dashboard-coupons"
           className="hidden 800px:flex items-center justify-center w-10 h-10 rounded-xl hover:bg-gray-100 transition-colors group"
           title="Coupons"
         >
-          <AiOutlineGift size={20} className="text-gray-600 group-hover:text-blue-600" />
+          <AiOutlineGift
+            size={20}
+            className="text-white group-hover:text-blue-600"
+          />
         </Link>
 
         <Link
@@ -31,7 +37,10 @@ function DashboardHeader() {
           className="hidden 800px:flex items-center justify-center w-10 h-10 rounded-xl hover:bg-gray-100 transition-colors group"
           title="Events"
         >
-          <MdOutlineLocalOffer size={20} className="text-gray-600 group-hover:text-blue-600" />
+          <MdOutlineLocalOffer
+            size={20}
+            className="text-white group-hover:text-blue-600"
+          />
         </Link>
 
         <Link
@@ -39,7 +48,10 @@ function DashboardHeader() {
           className="hidden 800px:flex items-center justify-center w-10 h-10 rounded-xl hover:bg-gray-100 transition-colors group"
           title="Products"
         >
-          <FiShoppingBag size={20} className="text-gray-600 group-hover:text-blue-600" />
+          <FiShoppingBag
+            size={20}
+            className="text-white group-hover:text-blue-600"
+          />
         </Link>
 
         <Link
@@ -47,7 +59,10 @@ function DashboardHeader() {
           className="hidden 800px:flex items-center justify-center w-10 h-10 rounded-xl hover:bg-gray-100 transition-colors group"
           title="Orders"
         >
-          <FiPackage size={20} className="text-gray-600 group-hover:text-blue-600" />
+          <FiPackage
+            size={20}
+            className="text-white group-hover:text-blue-600"
+          />
         </Link>
 
         <Link
@@ -55,7 +70,10 @@ function DashboardHeader() {
           className="hidden 800px:flex items-center justify-center w-10 h-10 rounded-xl hover:bg-gray-100 transition-colors group"
           title="Messages"
         >
-          <BiMessageSquareDetail size={20} className="text-gray-600 group-hover:text-blue-600" />
+          <BiMessageSquareDetail
+            size={20}
+            className="text-white group-hover:text-blue-600"
+          />
         </Link>
 
         <div className="ml-4 flex items-center">
@@ -69,7 +87,7 @@ function DashboardHeader() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default DashboardHeader
+export default DashboardHeader;

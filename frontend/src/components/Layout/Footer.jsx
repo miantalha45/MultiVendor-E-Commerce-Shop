@@ -10,6 +10,7 @@ import {
   footerProductLinks,
   footerSupportLinks,
 } from "../../static/data";
+import logo from "../../assets/logo.png";
 
 const Footer = () => {
   return (
@@ -36,7 +37,7 @@ const Footer = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:px-12 px-6 py-16">
         <ul className="px-5 text-center sm:text-start flex sm:block flex-col items-center sm:items-start">
           <img
-            src="https://shopo.quomodothemes.website/assets/images/logo.svg"
+            src={logo}
             alt=""
             style={{ filter: "brightness(0) invert(1)" }}
             className="mb-4"
@@ -110,7 +111,7 @@ const Footer = () => {
       <div className="border-t border-slate-700 bg-slate-900/50 backdrop-blur-sm">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-center pt-6 text-gray-400 text-sm pb-8 px-6">
           <span className="hover:text-gray-300 transition-colors">
-            © 2024 Becodemy. All rights reserved.
+            © 2025 Multi-Markets. All rights reserved.
           </span>
           <div className="flex justify-center gap-4">
             <Link
