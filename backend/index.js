@@ -19,12 +19,6 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 console.log("Connecting to DB:", process.env.MONGO_URI);
 connectDatabase();
 
-console.log("Cloudinary ENV:", {
-    name: process.env.CLOUDINARY_NAME,
-    key: process.env.CLOUDINARY_API_KEY ? "loaded" : "missing",
-    secret: process.env.CLOUDINARY_API_SECRET ? "loaded" : "missing"
-});
-
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
